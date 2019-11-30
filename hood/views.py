@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,Http404
 from .models import *
+from django.contrib import messages
 
 # Create your views here.
 @login_required(login_url='/accounts/login/')
@@ -31,3 +32,19 @@ def hood(request,hood_id):
     posts = Post.get_post(hood_id)
 
     return render(request,'hood.html',locals())
+
+@login_required(login_url='/accounts/login')
+def join(request,hood_id):
+    hood = Hood.objects.get(id=hood_id)
+    current_user = request.user
+    current_user.profile.hood = hood
+    current_user.profile.save()
+    return redirect('hood',hood_id)
+
+
+@login_required(login_url='/accounts/login')
+def leave(request,hood_id):
+    current_user = request.user
+    current_user.profile.hood = None
+    current_user.profile.save()
+    return redirect('home')
