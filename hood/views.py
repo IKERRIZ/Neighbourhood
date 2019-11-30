@@ -7,3 +7,17 @@ from django.http import HttpResponse,Http404
 def home(request):
     hoods = Hood.objects.all()
     return render(request,'home.html',locals())
+
+@login_required(login_url='/accounts/login/')
+def upload_hood(request):
+    current_user = request.user
+    if request.method == 'POST':
+        form = HoodForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload = form.save(commit=False)
+            hood.owner= current_user
+            upload.save()
+            return redirect('home')
+    else:
+        form = HoodForm()
+    return render(request, 'upload_hood.html', locals())
