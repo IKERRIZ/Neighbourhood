@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,Http404
 from .models import *
 from django.contrib import messages
+from . forms import *
+from django.contrib.auth.models import User
 
 # Create your views here.
 @login_required(login_url='/accounts/login/')
@@ -93,3 +95,62 @@ def edit(request):
     else:
         form = ProfileForm(instance=user)
     return render(request, 'edit_profile.html', locals()) 
+
+# business views
+@login_required(login_url='/accounts/login')
+def upload_business(request):
+    hood = Hood.objects.get(id=request.user.profile.hood.id)
+    if request.method == 'POST':
+        businessform = BusinessForm(request.POST, request.FILES)
+        if businessform.is_valid():
+            upload = businessform.save(commit=False)
+            upload.user=request.user
+            upload.hood=request.user.profile.hood
+            upload.save()
+        return redirect('hood',request.user.profile.hood.id)
+    else:
+        businessform = BusinessForm()
+    return render(request,'business.html',locals())  
+
+
+def search_category(request):
+    location = Location.objects.all()
+    category = Category.objects.all()
+    if 'Category' in request.GET and request.GET["Category"]:
+        category = request.GET.get("Category")
+        searched_business = Business.search_by_category(category)
+        message = f"{category}"
+
+        return render(request,'search_business.html', {"message":message,"Category":searched_business})
+
+    else:
+        message = "You haven't searched for anything"
+        return render(request,'search_business.html',{"message":message})
+    
+    
+def filter_location(request):
+    locations = Location.objects.all()
+    location = request.GET.get("location")
+
+    searched_image = Hood.filter_by_location(location)
+    message = f"{location}"
+
+    return render(request,'category/location.html', {"message":message,"location":searched_image, "locations":locations})    
+
+
+# Post view
+@login_required(login_url='/accounts/login')
+def add_post(request):
+    hood = Hood.objects.get(id=request.user.profile.hood.id)
+    if request.method == 'POST':
+        postform = PostForm(request.POST, request.FILES)
+        if postform.is_valid():
+            post = postform.save(commit=False)
+            post.profile = request.user.profile
+            post.user = request.user
+            post.hood=request.user.profile.hood
+            post.save()
+            return redirect('hood',request.user.profile.hood.id)
+    else:
+        postform = PostForm()
+    return render(request,'upload_post.html',locals())
