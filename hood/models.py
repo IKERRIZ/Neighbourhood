@@ -49,3 +49,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+class Hood(models.Model):
+    name = models.CharField(max_length=50)
+    image = ImageField()
+    occupants = models.CharField(max_length=50)
+    location = models.ForeignKey(Location)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
