@@ -34,6 +34,8 @@ Internet access
 * A user needs to log in if they have na existing account
 * A user can sign up if they do not have an account
 * A user then can be able to view neighbourhood details, other neighbourhood details and their businesses. The site will also provide important announcements and alerts of neighbourhood events.
+## Live site
+https://five-star-hood.herokuapp.com/
 ## Contacts
 For further questions you can send an email to okothfaith94@gmail.com
 
