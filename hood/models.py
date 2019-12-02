@@ -61,7 +61,7 @@ class Hood(models.Model):
     location = models.ForeignKey(Location)
     created_on = models.DateTimeField(auto_now_add=True, null=True)
     
-     class Meta:
+    class Meta:
         ordering = ['-pk']
 
     def save_hood(self):
