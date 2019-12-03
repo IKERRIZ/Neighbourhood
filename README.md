@@ -45,6 +45,10 @@ For further questions you can send an email to okothfaith94@gmail.com
 * django framework
 * Bootstrap
 * PostgreSQL
+
+## Dependencies
+* pip
+
 ## Contributions
 Any contributions to this projects will be greatly appreciated. If you want to contribute to it, here are the suggested instructions:
 
